@@ -1,11 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <cstring>
 #include <algorithm>
 #include <string>
-#include <stdio.h>
-#include <stdlib.h>
+#include <vector>
 
 namespace suffix_array {
   
@@ -13,7 +11,6 @@ namespace suffix_array {
   class SuffixArray {
     public:
       SuffixArray(std::string strIn): N(strIn.size()), sufA(strIn.size()), rank(strIn.size()), tmp(strIn.size()), txt(std::move(strIn)) {};
-//      ~SuffixArray() {};
       void build();    
       void printSuffixArray();
       std::vector<T> returnSuffixArray();
@@ -37,6 +34,7 @@ namespace suffix_array {
     }
     std::cout << '\n';
   }
+
   // Concise O(n(logn)^2) 
   // TODO: Overload sort to be counting/radix sort to reduce runtime to O(nlogn)
   template<typename T>
@@ -66,7 +64,6 @@ namespace suffix_array {
         rank[sufA[i]] = tmp[i];
       }
 //      if (tmp[N - 1] == N - 1) break; //break vs for loop?
-//      k << 1;
     }
 
   }
