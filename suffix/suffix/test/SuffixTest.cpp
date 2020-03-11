@@ -1,6 +1,7 @@
 #include <suffix.hpp>
 #include <string.h>
 #include <vector>
+#include <cassert>
 
 using namespace suffix_array;
 using namespace std;
