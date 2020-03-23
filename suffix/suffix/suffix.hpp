@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <cstring>
 #include <vector>
 
 namespace suffix_array {
@@ -97,8 +98,8 @@ namespace suffix_array {
 
   template<typename T>
   void SuffixArray<T>::counting_sort(T k) {
-    int i, sum, maxi = std::max(300, N); // up to 255 ASCII chars or length of n
-    memset(c, 0, sizeof c); // clear frequency table
+    int i, sum, maxi = std::max(300, N);
+    memset(c, 0, sizeof(c)); // clear frequency table
 
     for (i = 0; i < N; i++){ // count the frequency of each integer rank
       c[i + k < N ? rank[i + k] : 0]++;
@@ -113,20 +114,20 @@ namespace suffix_array {
       sufA[i] = tmpSuf[i];
     }
   }
+  
   // O(nlogn) using radix sort
   template<typename T>
   void SuffixArray<T>::build_with_radix_sort() {
     int i, r;
-    for (i = 0; i < N; ++i) rank[i] = txt[i]; // initial rankings
-    for (i = 0; i < N; ++i) sufA[i] = i; //initial SA: {0, 1, 2, ..., n-1}
+    for (i = 0; i < N; ++i) rank[i] = txt[i];
+    for (i = 0; i < N; ++i) sufA[i] = i;
 
-    for (k = 1; k < N; k <<= 1) { // repeat sorting process log n times
-      SuffixArray<T>::counting_sort(k); //actually radix sort:sort based on the second item
-      SuffixArray<T>::counting_sort(0); // then (stable) sort based on the first item
+    for (k = 1; k < N; k <<= 1) { 
+      SuffixArray<T>::counting_sort(k);
+      SuffixArray<T>::counting_sort(0);
 
-      tmpRank[sufA[0]] = r = 0; // re-ranking; start from rank r = 0
+      tmpRank[sufA[0]] = r = 0;
 
-      // compare adjacent suffixes
       for (i = 1; i < N; i++){
         // if same pair => same rank r; otherwise,increase r
         tmpRank[sufA[i]] = (rank[sufA[i]] == rank[sufA[i-1]] && rank[sufA[i]+k] == rank[sufA[i-1]+k]) ? r : ++r;           
