@@ -35,6 +35,7 @@ void solve(std::string str1, std::string str2) {
 
   if (!lcs) {
     std::cout << "No sequence" << '\n';
+    return;
   }
 
   for(int i = 1; i < newStr.length(); i++){
@@ -62,11 +63,66 @@ void solve(std::string str1, std::string str2) {
   }
 }
 
+void test_simple() {
+  std::string s1 = "atgc", s2 = "tga";
+  std::cout << "Expected:" << '\n';
+  std::cout << "tg" << '\n';
+  std::cout << "Actual: " << '\n';
+  solve(s1, s2);
+}
+
+void test_multiple_output() {
+  std::string s1 = "atgc", s2 = "gctg";
+  std::cout << "Expected:" << '\n';
+  std::cout << "gc" << '\n';
+  std::cout << "tg" << '\n';
+  std::cout << "Actual: " << '\n';
+  solve(s1, s2);
+}
+
+void test_different_input() {
+  std::string s1 = "helloworld";
+  std::string s2 = "helloworlds";
+  std::cout << "Expected:" << '\n';
+  std::cout << "helloworld" << '\n';
+  std::cout << "Actual: " << '\n';
+  solve(s1, s2);
+}
+
+void test_complex() {
+  std::string s1 = "tgtgcattcgcggcacaagagtcccgggtccctgtagctttgatcagctcgaatccatttagatctttagctcgcagcgaacaaggcgaaaagacccggcccgttctaaatactttagatgttgtgtggattctcggaagatggcaagatagctcgtggaaatctacaacgagggtgaagtaggctcgttgtcaggataaggtccaacaatttaagcgcgatactgcctccatggaagcaggcaacgctttcctaaacctaaccatcaaaaggcagtgtctcag";
+  std::string s2 = "gtgagttacgccaacaacagtagcgaaagtaccgcttatgggtaggagtagcacaactatcaaaacttcgacctccacttgaagcagttacgacgatttgattccgacccatcaataaccaatagttaccgcatacattcgtgttactaagattaactaaagcaacctgggcagatgcgggcgaggattattggtacgttgaaggatccattcatcatgtttctagtcccatcatcacacccaactccgcgagttgaccgacagcttcgtatgacccaatcatttgt";
+  std::cout << "Expected:" << '\n';
+  std::cout << "atcaaaa" << '\n';
+  std::cout << "atccatt" << '\n';
+  std::cout << "ccaacaa" << '\n';
+  std::cout << "ccatcaa" << '\n';
+  std::cout << "gaagcag" << '\n';
+  std::cout << "Actual: " << '\n';
+  solve(s1, s2);
+}
+
+void test_no_sequence() {
+  std::string s1 = "a";
+  std::string s2 = "";
+  std::cout << "Expected:" << '\n';
+  std::cout << "No sequence" << '\n';
+  std::cout << "Actual: " << '\n';
+  solve(s1, s2);
+}
+
 int main()
 {
-  std::string s1 = "atgc", s2 = "gctg";
-  
-  solve(s1, s2);
+  std::cout << "Test 1: -----------------------" << '\n';
+  test_simple();
+  std::cout << "Test 2: -----------------------" << '\n';
+  test_multiple_output();
+  std::cout << "Test 3: -----------------------" << '\n';
+  test_different_input();
+  std::cout << "Test 4: -----------------------" << '\n';
+  test_complex();
+  std::cout << "Test 5: -----------------------" << '\n';
+  test_no_sequence();
 
   return 0;
 }
