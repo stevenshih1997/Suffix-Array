@@ -5,18 +5,19 @@
 #include <string>
 #include <vector>
 
-#include "util.hpp"
-
 namespace suffix_array {
   
   template<typename T>
   class SuffixArray {
     public:
-      SuffixArray(std::string strIn): N(strIn.size()), sufA(strIn.size()), rank(strIn.size()), tmpSuf(strIn.size()), tmpRank(strIn.size()), txt(std::move(strIn)) {};
+      SuffixArray(std::string strIn): N(strIn.size()), sufA(strIn.size()), rank(strIn.size()), lcpA(strIn.size()), tmpSuf(strIn.size()), tmpRank(strIn.size()), txt(std::move(strIn)) {};
       void build_with_sort();    
       void build_with_radix_sort();    
       void print_suffix_array();
+      void print_rank_array();
+      void build_lcp();
       std::vector<T> return_suffix_array();
+      std::vector<T> return_lcp_array();
 
     private:
       T N;
@@ -24,6 +25,7 @@ namespace suffix_array {
       T c[300];
       std::vector<T> sufA;
       std::vector<T> rank;
+      std::vector<T> lcpA;
       std::vector<T> tmpSuf;
       std::vector<T> tmpRank;
       std::string txt;
@@ -34,11 +36,31 @@ namespace suffix_array {
   std::vector<T> SuffixArray<T>::return_suffix_array() { return sufA; }
 
   template<typename T>
-  void SuffixArray<T>::print_suffix_array() {
-    for (auto& e : sufA) {
-      std::cout << e << ' ';
+  std::vector<T> SuffixArray<T>::return_lcp_array() { return lcpA; }
+
+  template<typename T>
+  void SuffixArray<T>::print_suffix_array() { for (auto& e : sufA) std::cout << e << ' '; std::cout << '\n'; }
+
+  template<typename T>
+  void SuffixArray<T>::print_rank_array() { for (auto& e : rank) std::cout << e << ' '; std::cout << '\n'; }
+  
+  template<typename T>
+  void SuffixArray<T>::build_lcp() {
+    int l=0;
+    std::vector<T> tempLcp(N, 0);
+    rank[sufA[0]] = -1;
+    for(int i = 1; i < N; i++) rank[sufA[i]] = sufA[i-1];
+
+    for(int i=0; i<N; i++) {
+      if(rank[i]==-1) {
+        tempLcp[i] = 0;
+        continue;
+      }
+      while (txt[i+l]==txt[rank[i]+l]) l++;
+      tempLcp[i] = l;
+      l = std::max(l-1, 0);
     }
-    std::cout << '\n';
+    for (int i = 0; i < N; i++) lcpA[i] = tempLcp[sufA[i]];
   }
 
   // Concise O(n(logn)^2) 
