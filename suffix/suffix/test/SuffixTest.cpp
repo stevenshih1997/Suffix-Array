@@ -1,5 +1,7 @@
 #include <suffix.hpp>
 #include <string.h>
+#include <sstream>
+#include <fstream>
 #include <vector>
 #include <cassert>
 
