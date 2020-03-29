@@ -59,7 +59,7 @@ namespace suffix_array {
       } else {
         while (txt[i+l]==txt[cLookup[i]+l]) l++;
         tempLcp[i] = l;
-        l = std::max(l-1, 0);
+        if (l > 0) l--;
       }
     }
     for (int i = 0; i < N; i++) lcpA[i] = tempLcp[sufA[i]];
@@ -99,24 +99,26 @@ namespace suffix_array {
 
   template<typename T>
   void SuffixArray<T>::counting_sort(T k) {
-    int i, sum, maxi = std::max(1000005, N);
+    int i, sum, maxN = std::max(1000005, N);
     memset(c, 0, sizeof(c)); // clear frequency table
 
     for (i = 0; i < N; i++){ // count the freq of each integer rank
       c[i + k < N ? rank[i + k] : 0]++;
     }
-    for (i = sum = 0; i < maxi; i++) {
-      int t = c[i]; c[i] = sum; sum += t; 
+    for (i = sum = 0; i < maxN; i++) { // cumulative sum of each array
+      int acc = c[i]; 
+      c[i] = sum; 
+      sum += acc; 
     }
-    for (i = 0; i < N; i++){ // shuffle the suffix array if needed
-      tmpSuf[c[sufA[i]+k < N ? rank[sufA[i]+k] : 0]++] = sufA[i];
+    for (i = 0; i < N; i++){ // shuffle
+      tmpSuf[c[sufA[i]+k < N ? rank[sufA[i]+k] : 0]++] = sufA[i]; // From codeforces
     }
-    for (i = 0; i < N; i++){
+    for (i = 0; i < N; i++){ // copy to suffix array
       sufA[i] = tmpSuf[i];
     }
   }
   
-  // O(nlogn) using radix sort
+  // O(nlogn) using counting sort
   template<typename T>
   void SuffixArray<T>::build_with_radix_sort() {
     int i, r;
@@ -130,7 +132,7 @@ namespace suffix_array {
       tmpRank[sufA[0]] = r = 0;
 
       for (i = 1; i < N; i++){
-        // if same pair => same rank r; otherwise,increase rank
+        // if same pair => same rank r; otherwise, increase rank
         tmpRank[sufA[i]] = (rank[sufA[i]] == rank[sufA[i-1]] && rank[sufA[i]+k] == rank[sufA[i-1]+k]) ? r : ++r;           
       }
 
